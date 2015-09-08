@@ -1,7 +1,6 @@
 '''Usage : python celery_service.py install (start / stop / remove)
 Run celery as a Windows service
 '''
-
 import win32service
 import win32serviceutil
 import win32api
@@ -14,8 +13,18 @@ import shlex
 import logging
 import time
 
+# The directory for celery.log and celery_service.log
+# Default: the directory of this script
 INSTDIR = os.path.dirname(os.path.realpath(__file__))
-PYTHONSCRIPTPATH = r'C:\Python27\Scripts'
+# The path of python Scripts
+# Usually it is in PYTHON_INSTALL_DIR/Scripts. e.g.
+# r'C:\Python27\Scripts'
+# If it is already in system PATH, then it can be set as ''
+PYTHONSCRIPTPATH = ''
+# The directory name of django project
+# Note: it is the directory at the same level of manage.py
+# not the parent directory
+PROJECTDIR = 'proj'
 
 logging.basicConfig(
     filename = os.path.join(INSTDIR, 'celery_service.log'),
@@ -44,8 +53,9 @@ class CeleryService(win32serviceutil.ServiceFramework):
         os.chdir(INSTDIR) # so that proj worker can be found
         logging.info('cwd: ' + os.getcwd())
         self.ReportServiceStatus(win32service.SERVICE_RUNNING)
-        command = '"{celery_path}" -A proj worker -f "{log_path}" -l info'.format(
+        command = '"{celery_path}" -A {proj_dir} worker -f "{log_path}" -l info'.format(
             celery_path=os.path.join(PYTHONSCRIPTPATH, 'celery.exe'),
+            proj_dir=PROJECTDIR,
             log_path=os.path.join(INSTDIR,'celery.log'))
         logging.info('command: ' + command)
         args = shlex.split(command)
@@ -63,6 +73,6 @@ class CeleryService(win32serviceutil.ServiceFramework):
                 win32api.CloseHandle(handle)                
                 break
                   
-if __name__ == '__main__':   
+if __name__ == '__main__':
    win32serviceutil.HandleCommandLine(CeleryService)
 
