@@ -1,6 +1,10 @@
 ==============================================================
  Example Django project using Celery
 ==============================================================
+Note:
+This is the original README for
+https://github.com/celery/celery/tree/master/examples/django
+Please refer to README.md for information specific to this project
 
 Contents
 ========
