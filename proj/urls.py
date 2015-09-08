@@ -6,10 +6,9 @@ from django.conf.urls import (  # noqa
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns(
-    '',
+urlpatterns = patterns('demoapp.views',
     # Examples:
-    # url(r'^$', 'proj.views.home', name='home'),
+    url(r'^$', 'home'),
     # url(r'^proj/', include('proj.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
@@ -17,4 +16,6 @@ urlpatterns = patterns(
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+    url(r'^add/(\d+)/(\d+)$', 'add'),
+    url(r'^mul/(\d+)/(\d+)$', 'mul'),    
 )
