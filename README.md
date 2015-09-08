@@ -6,10 +6,9 @@ A demo Django project with celery running as a Windows service
 Prerequisites
 -------------
 
-This project builds upon celery's official Django example project:
-https://github.com/celery/celery/tree/3.1/examples/django/
+This project builds upon [celery's official Django example project](https://github.com/celery/celery/tree/3.1/examples/django/).
 
-See http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html for a step-by-step guide.
+See [celery documentation](http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html) for a step-by-step guide to use celery with Django.
 
 This README assumes that Python, Django, celery and RabbitMQ are already installed.
 
@@ -38,19 +37,34 @@ Or click "Download ZIP" on the right sidebar, and decompress it.
 
 ### Set up and run
 
-    # Go to the directory
+Go to the directory
+
     cd django_celery_windows_service
-    # Setup Django database
+
+Setup Django database
+
     python manage.py syncdb
-    # Correctly set python scripts path
-    # It is usually the "Scripts" folder under your python's installation path
-    # e.g. C:\Python27\Scripts
-    # Either append it to your system's PATH
-    # or edit celery_service.py PYTHONSCRIPTPATH = r'C:\Python27\Scripts'
-    # Install and start celery Windows service
+
+Correctly set python scripts path.
+
+It is usually the "Scripts" folder under your python's installation path
+
+e.g. C:\Python27\Scripts
+
+Either append it to your system's PATH,
+
+or edit celery_service.py
+
+    # in celery_service.py
+    PYTHONSCRIPTPATH = r'C:\Python27\Scripts'
+
+Install and start celery Windows service
+
     python acelery_service.py install
     python celery_service.py start
-    # Start Django development server
+
+Start Django development server
+
     python manage.py runserver
 
 ### Check whether installation is successful
@@ -69,7 +83,7 @@ celery.log should contain something like the following:
     ...
     celery@melody ready.
 
-Now when you visit http://localhost:8000/add/1/2
+Now when you visit [http://localhost:8000/add/1/2](http://localhost:8000/add/1/2)
 
 celery.log should have the following:
 
@@ -80,9 +94,9 @@ celery.log should have the following:
 
 You can play with urls like
 
-http://localhost:8000/add/123/456
+[http://localhost:8000/add/123/456](http://localhost:8000/add/123/456)
 
-http://localhost:8000/mul/78/90
+[http://localhost:8000/mul/78/90](http://localhost:8000/mul/78/90)
 
 ### Stop and remove the celery Windows service
 
