@@ -108,3 +108,7 @@ You can play with urls like
     python celery_service.py stop
     python celery_service.py remove
 
+
+---------------
+
+An older version of this demo project with Python 2.7, Django 1.6 and celery 3.1 is in branch [celery3](https://github.com/azalea/django_celery_windows_service/tree/celery3)
