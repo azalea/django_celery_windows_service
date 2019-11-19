@@ -5,7 +5,7 @@ A demo Django project with celery running as a Windows service
 Prerequisites
 -------------
 
-This project builds upon [celery's official Django example project](https://github.com/celery/celery/tree/3.1/examples/django/).
+This project builds upon [celery's official Django example project](https://github.com/celery/celery/tree/4.4/examples/django/).
 
 See [celery documentation](http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html) for a step-by-step guide to use celery with Django.
 
