@@ -9,25 +9,25 @@ import win32event
 import subprocess
 import sys
 import os
+from pathlib import Path
 import shlex
 import logging
 import time
 
 # The directory for celery.log and celery_service.log
 # Default: the directory of this script
-INSTDIR = os.path.dirname(os.path.realpath(__file__))
+INSTDIR = Path(__file__).parent
 # The path of python Scripts
-# Usually it is in PYTHON_INSTALL_DIR/Scripts. e.g.
-# r'C:\Python27\Scripts'
+# Usually it is in path_to/venv/Scripts.
 # If it is already in system PATH, then it can be set as ''
-PYTHONSCRIPTPATH = ''
+PYTHONSCRIPTPATH = INSTDIR / 'venvcelery/Scripts'
 # The directory name of django project
 # Note: it is the directory at the same level of manage.py
 # not the parent directory
 PROJECTDIR = 'proj'
 
 logging.basicConfig(
-    filename = os.path.join(INSTDIR, 'celery_service.log'),
+    filename = INSTDIR / 'celery_service.log',
     level = logging.DEBUG, 
     format = '[%(asctime)-15s: %(levelname)-7.7s] %(message)s'
 )
@@ -53,10 +53,10 @@ class CeleryService(win32serviceutil.ServiceFramework):
         os.chdir(INSTDIR) # so that proj worker can be found
         logging.info('cwd: ' + os.getcwd())
         self.ReportServiceStatus(win32service.SERVICE_RUNNING)
-        command = '"{celery_path}" -A {proj_dir} worker -f "{log_path}" -l info'.format(
-            celery_path=os.path.join(PYTHONSCRIPTPATH, 'celery.exe'),
+        command = '"{celery_path}" -A {proj_dir} worker -f "{log_path}" -l info -P eventlet'.format(
+            celery_path=PYTHONSCRIPTPATH / 'celery.exe',
             proj_dir=PROJECTDIR,
-            log_path=os.path.join(INSTDIR,'celery.log'))
+            log_path=INSTDIR / 'celery.log')
         logging.info('command: ' + command)
         args = shlex.split(command)
         proc = subprocess.Popen(args)
