@@ -1,3 +1,5 @@
 django>=2.0.0
 sqlalchemy>=1.0.14
-celery>=4.3.0
+celery>=4.3.0,<5.0
+pywin32>=227
+eventlet>=0.25

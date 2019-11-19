@@ -9,22 +9,10 @@ This project builds upon [celery's official Django example project](https://gith
 
 See [celery documentation](http://celery.readthedocs.org/en/latest/django/first-steps-with-django.html) for a step-by-step guide to use celery with Django.
 
-This README assumes that Python, Django, celery and RabbitMQ are already installed.
+This README assumes that Python >= 3.6 and RabbitMQ are already installed, and `rabbitmq-server` is running on `localhost`.
 
 Installation
 ------------
-
-### Install pywin32
-
-pywin32 is needed for running celery as a Windows service.
-
-Download and install [pywin32](http://sourceforge.net/projects/pywin32/files/pywin32/).
-
-Please make sure the pywin32 version matches your Python version and the architecture your Python is built with (your Python can be 32-bit even if your OS is 64-bit). This information can be obtained by typing python in the command line. i.e.
-
-    C:\>python
-    Python 2.7.8 (default, Jun 30 2014, 16:03:49) [MSC v.1500 32 bit (Intel)] on win32
-    >>>
 
 ### Clone this repository
 
@@ -32,34 +20,51 @@ You can either run the following in [Git Bash](https://desktop.github.com/)
 
     git clone git@github.com:azalea/django_celery_windows_service.git
 
-Or click "Download ZIP" on the right sidebar, and decompress it. 
+Or click "Download ZIP" on the right sidebar, and decompress it.
 
-### Set up and run
+### Install pywin32, Django 2, celery 4, eventlet and other dependencies
 
-Go to the directory
+pywin32 is needed for running celery as a Windows service.
+
+Other dependencies are inherited from the offical django example project.
+
+eventlet is required for celery 4 to run on Windows. See discussions [1](https://stackoverflow.com/questions/37255548/how-to-run-celery-on-windows/47331438#47331438) [2](https://github.com/celery/celery/issues/4082)
+
+Install by the following steps:
+
+Go to the repository
 
     cd django_celery_windows_service
 
+Create a virtual env named `venvcelery`
+
+    path_to\python -m venv venvcelery
+    venvcelery\Scripts\activate
+
+Install
+
+    pip install -r requirements.txt
+
+Copy `pywintypes36.dll` to correct location. [ref](https://stackoverflow.com/questions/41200068)
+
+    cp venvcelery\Lib\site-packages\pywin32_system32\pywintypes36.dll venvcelery\Lib\site-packages\win32
+
+### Set up and run
+
 Setup Django database
 
-    python manage.py syncdb
+    python manage.py migrate
 
-Correctly set python scripts path.
+Correctly set python scripts path, which is `path_to\venvcelery\Scripts`
 
-It is usually the "Scripts" folder under your python's installation path
-
-e.g. C:\Python27\Scripts
-
-Either append it to your system's PATH,
-
-or edit celery_service.py
+Edit celery_service.py
 
     # in celery_service.py
-    PYTHONSCRIPTPATH = r'C:\Python27\Scripts'
+    PYTHONSCRIPTPATH = r'path_to\venvcelery\Scripts'
 
 Install and start celery Windows service
 
-    python acelery_service.py install
+    python celery_service.py install
     python celery_service.py start
 
 Start Django development server
@@ -68,15 +73,16 @@ Start Django development server
 
 ### Check whether installation is successful
 
-Two files: celery_service.log and celery.log should be found in the directory.
-celery_service.log should contain the following information:
+Two files `celery_service.log` and `celery.log` should be found in the current directory.
+
+`celery_service.log` should contain the following information:
 
     Starting Celery service ...
     cwd: ****
     command: ****
     pid: ****
 
-celery.log should contain something like the following:
+`celery.log` should contain something like the following:
     
     Connected to amqp://guest:**@127.0.0.1:5672//
     ...
@@ -99,6 +105,6 @@ You can play with urls like
 
 ### Stop and remove the celery Windows service
 
-    python acelery_service.py stop
+    python celery_service.py stop
     python celery_service.py remove
 
